@@ -13,6 +13,14 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+## [11.0.1] - 2026-05-08
+- Fix XSS risk in `App.confirm()`: switch title to `textContent` and sanitize body with DOMPurify
+- Replace `eval()` with `new Function()` in OutputWaiter to limit scope exposure from operation-generated scripts
+- Replace bare string throws with `OperationError` in ParseX509Certificate, ParseX509CRL, HeatmapChart, and HTTPRequest
+- Add missing `OperationError` import to ParseX509Certificate
+- Wrap `JSON.parse` in try/catch in JWKToPem so malformed input surfaces as a user-facing error
+- Add `infoURL` reference links to 23 operations that had empty documentation fields
+
 ## [11.0.0] - 2026-04-28
 - Revert sitemap to v8.0.X to fix build/deploy on master [@GCHQDeveloper581] | [#2348]
 - Node version update from 22 to 24 [@lzandman] [@GCHQDeveloper581] | [#2347]
