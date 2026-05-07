@@ -13,6 +13,11 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+## [11.0.2] - 2026-05-08
+- Improve Magic auto-detection for CTF ciphers: ROT13, ROT47, and Atbash Cipher now detected speculatively on text-like inputs
+- Magic detection reasons: each suggested operation now records which pattern and entropy range triggered it
+- Magic Properties column redesign: "Triggered by" pills show the detection signal per op; language/file/UTF-8 shown as coloured category pills; entropy rendered as a colour-coded bar with plain-English label
+
 ## [11.0.1] - 2026-05-08
 - Fix XSS risk in `App.confirm()`: switch title to `textContent` and sanitize body with DOMPurify
 - Replace `eval()` with `new Function()` in OutputWaiter to limit scope exposure from operation-generated scripts
