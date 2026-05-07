@@ -179,6 +179,22 @@ class Magic {
             });
         }
 
+        // ROT-n (Caesar shifts 1–25) — brute-force all rotations over lowercase and uppercase.
+        // Skips shift 0 (identity) and relies on language scoring to surface the correct shift.
+        for (let i = 1; i < 26; i++) {
+            results.push({
+                data: sample.map(b => {
+                    if (b >= 65 && b <= 90) return ((b - 65 + i) % 26) + 65; // uppercase
+                    if (b >= 97 && b <= 122) return ((b - 97 + i) % 26) + 97; // lowercase
+                    return b;
+                }).buffer,
+                conf: {
+                    op: "ROT13",
+                    args: [true, true, false, i]
+                }
+            });
+        }
+
         // Character encodings
         const encodings = OperationConfig["Encode text"].args[0].value;
 
