@@ -21,7 +21,7 @@ class TakeNthBytes extends Operation {
         this.name = "Take nth bytes";
         this.module = "Default";
         this.description = "Takes every nth byte starting with a given byte.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Byte";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [

@@ -10,6 +10,7 @@ import { runHash } from "../lib/Hash.mjs";
 import { fromHex, toHex } from "../lib/Hex.mjs";
 import { formatByteStr, formatDnObj } from "../lib/PublicKey.mjs";
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 
 /**
@@ -78,9 +79,9 @@ class ParseX509Certificate extends Operation {
                     undefinedInputFormat = true;
             }
         } catch (e) {
-            throw "Certificate load error (non-certificate input?)";
+            throw new OperationError("Certificate load error (non-certificate input?)");
         }
-        if (undefinedInputFormat) throw "Undefined input format";
+        if (undefinedInputFormat) throw new OperationError("Undefined input format");
 
         const hex = Utils.strToArrayBuffer(Utils.byteArrayToChars(fromHex(cert.hex))),
             sn = cert.getSerialNumberHex(),

@@ -25,7 +25,7 @@ class ImageHueSaturationLightness extends Operation {
         this.module = "Image";
         this.description =
             "Adjusts the hue / saturation / lightness (HSL) values of an image.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/HSL_and_HSV";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";

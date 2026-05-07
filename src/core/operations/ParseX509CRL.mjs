@@ -75,9 +75,9 @@ class ParseX509CRL extends Operation {
                     undefinedInputFormat = true;
             }
         } catch (e) {
-            throw "Certificate load error (non-certificate input?)";
+            throw new OperationError("Certificate load error (non-certificate input?)");
         }
-        if (undefinedInputFormat) throw "Undefined input format";
+        if (undefinedInputFormat) throw new OperationError("Undefined input format");
 
         const crl = new r.X509CRL(input);
 

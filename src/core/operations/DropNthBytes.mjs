@@ -21,7 +21,7 @@ class DropNthBytes extends Operation {
         this.name = "Drop nth bytes";
         this.module = "Default";
         this.description = "Drops every nth byte starting with a given byte.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Byte";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [

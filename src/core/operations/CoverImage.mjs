@@ -31,7 +31,7 @@ class CoverImage extends Operation {
         this.module = "Image";
         this.description =
             "Scales the image to the given width and height, keeping the aspect ratio. The image may be clipped.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Aspect_ratio_(image)";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";

@@ -23,7 +23,7 @@ class A1Z26CipherDecode extends Operation {
         this.name = "A1Z26 Cipher Decode";
         this.module = "Ciphers";
         this.description = "Converts alphabet order numbers into their corresponding  alphabet character.<br><br>e.g. <code>1</code> becomes <code>a</code> and <code>2</code> becomes <code>b</code>.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Substitution_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

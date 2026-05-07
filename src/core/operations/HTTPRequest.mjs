@@ -87,7 +87,7 @@ class HTTPRequest extends Operation {
             if (line.length === 0) return;
 
             const split = line.split(":");
-            if (split.length !== 2) throw `Could not parse header in line: ${line}`;
+            if (split.length !== 2) throw new OperationError(`Could not parse header in line: ${line}`);
 
             headers.set(split[0].trim(), split[1].trim());
         });

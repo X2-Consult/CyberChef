@@ -233,8 +233,8 @@ class HeatmapChart extends Operation {
             yBounds = d3.extent(values, d => d[1]),
             bins = [];
 
-        if (xBounds[0] === xBounds[1]) throw "Cannot pack points. There is no difference between the minimum and maximum X coordinate.";
-        if (yBounds[0] === yBounds[1]) throw "Cannot pack points. There is no difference between the minimum and maximum Y coordinate.";
+        if (xBounds[0] === xBounds[1]) throw new OperationError("Cannot pack points. There is no difference between the minimum and maximum X coordinate.");
+        if (yBounds[0] === yBounds[1]) throw new OperationError("Cannot pack points. There is no difference between the minimum and maximum Y coordinate.");
 
         for (let y = 0; y < vBins; y++) {
             bins.push([]);

@@ -365,12 +365,14 @@ class OutputWaiter {
         // Add class to #output-text to change display settings
         this.outputTextEl.classList.add("html-output");
 
-        // Execute script sections
+        // Execute script sections — use Function() instead of eval() to avoid
+        // exposing the local scope to operation-generated scripts.
         const outputHTML = document.getElementById("output-html");
         const scriptElements = outputHTML ? outputHTML.querySelectorAll("script") : [];
         for (let i = 0; i < scriptElements.length; i++) {
             try {
-                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+                // eslint-disable-next-line no-new-func
+                (new Function(scriptElements[i].textContent))();
             } catch (err) {
                 log.error(err);
             }

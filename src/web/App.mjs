@@ -6,6 +6,7 @@
 
 import Utils, { debounce } from "../core/Utils.mjs";
 import {fromBase64} from "../core/lib/Base64.mjs";
+import DOMPurify from "dompurify";
 import Manager from "./Manager.mjs";
 import HTMLCategory from "./HTMLCategory.mjs";
 import HTMLOperation from "./HTMLOperation.mjs";
@@ -731,8 +732,8 @@ class App {
      */
     confirm(title, body, accept, reject, callback, scope) {
         scope = scope || this;
-        document.getElementById("confirm-title").innerHTML = title;
-        document.getElementById("confirm-body").innerHTML = body;
+        document.getElementById("confirm-title").textContent = title;
+        document.getElementById("confirm-body").innerHTML = DOMPurify.sanitize(body);
         document.getElementById("confirm-yes").innerText = accept;
         document.getElementById("confirm-no").innerText = reject;
         document.getElementById("confirm-modal").style.display = "block";

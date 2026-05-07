@@ -24,7 +24,7 @@ class ImageOpacity extends Operation {
         this.name = "Image Opacity";
         this.module = "Image";
         this.description = "Adjust the opacity of an image.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Alpha_compositing";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";

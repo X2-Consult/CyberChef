@@ -23,7 +23,7 @@ class SM2Decrypt extends Operation {
         this.name = "SM2 Decrypt";
         this.module = "Crypto";
         this.description = "Decrypts a message utilizing the SM2 standard";
-        this.infoURL = ""; // Usually a Wikipedia link. Remember to remove localisation (i.e. https://wikipedia.org/etc rather than https://en.wikipedia.org/etc)
+        this.infoURL = "https://wikipedia.org/wiki/SM2_(cryptography)";
         this.inputType = "string";
         this.outputType = "ArrayBuffer";
         this.args = [

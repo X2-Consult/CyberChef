@@ -41,7 +41,12 @@ class PEMToJWK extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const inputJson = JSON.parse(input);
+        let inputJson;
+        try {
+            inputJson = JSON.parse(input);
+        } catch (e) {
+            throw new OperationError("Invalid JSON: " + e.message);
+        }
 
         let keys = [];
         if (Array.isArray(inputJson)) {

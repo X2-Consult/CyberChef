@@ -31,7 +31,7 @@ class ContainImage extends Operation {
         this.module = "Image";
         this.description =
             "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Aspect_ratio_(image)";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";

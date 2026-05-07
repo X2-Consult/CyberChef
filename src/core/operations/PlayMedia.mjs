@@ -25,7 +25,7 @@ class PlayMedia extends Operation {
         this.name = "Play Media";
         this.module = "Default";
         this.description = "Plays the input as audio or video depending on the type.<br><br>Tags: sound, movie, mp3, mp4, mov, webm, wav, ogg";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/HTML5_video";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.presentType = "html";

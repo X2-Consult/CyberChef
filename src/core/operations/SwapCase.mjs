@@ -20,7 +20,7 @@ class SwapCase extends Operation {
         this.name = "Swap case";
         this.module = "Default";
         this.description = "Converts uppercase letters to lowercase ones, and lowercase ones to uppercase ones.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Letter_case";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

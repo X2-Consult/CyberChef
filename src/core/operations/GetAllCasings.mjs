@@ -20,7 +20,7 @@ class GetAllCasings extends Operation {
         this.name = "Get All Casings";
         this.module = "Default";
         this.description = "Outputs all possible casing variations of a string.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Letter_case";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];

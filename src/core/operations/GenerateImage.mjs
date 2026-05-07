@@ -26,7 +26,7 @@ class GenerateImage extends Operation {
         this.module = "Image";
         this.description =
             "Generates an image using the input as pixel values.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Raster_graphics";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";

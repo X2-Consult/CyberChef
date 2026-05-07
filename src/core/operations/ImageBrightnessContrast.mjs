@@ -24,7 +24,7 @@ class ImageBrightnessContrast extends Operation {
         this.name = "Image Brightness / Contrast";
         this.module = "Image";
         this.description = "Adjust the brightness or contrast of an image.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Brightness";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";

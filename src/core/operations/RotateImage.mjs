@@ -25,7 +25,7 @@ class RotateImage extends Operation {
         this.module = "Image";
         this.description =
             "Rotates an image by the specified number of degrees.";
-        this.infoURL = "";
+        this.infoURL = "https://wikipedia.org/wiki/Image_rotation";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";
