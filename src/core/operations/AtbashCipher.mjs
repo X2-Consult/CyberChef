@@ -24,6 +24,19 @@ class AtbashCipher extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/Atbash";
         this.inputType = "string";
         this.outputType = "string";
+        this.checks = [
+            {
+                // Input is predominantly alphabetic with word structure — Atbash only transforms letters,
+                // so non-alpha-heavy inputs are unlikely to reveal meaningful plaintext.
+                pattern: "(?:[a-zA-Z]{2,}\\s*){4,}",
+                flags: "",
+                args: [],
+                entropyRange: [3.0, 5.5],
+                output: {
+                    entropyRange: [3.0, 5.5]
+                }
+            }
+        ];
         this.args = [];
     }
 

@@ -88,69 +88,95 @@ class Magic extends Operation {
     present(options) {
         const currentRecipeConfig = this.state.opList.map(op => op.config);
 
-        let output = `<table
-                class='table table-hover table-sm table-bordered'
-                style='table-layout: fixed;'>
+        let output = `<style>
+            .magic-signals { font-size: 0.82em; line-height: 1.7; }
+            .magic-signals .sig-section { margin-bottom: 3px; }
+            .magic-signals .sig-label { font-weight: 600; color: #888; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.04em; }
+            .magic-pill { display: inline-block; border-radius: 3px; padding: 1px 6px; margin: 1px 2px; font-size: 0.82em; white-space: nowrap; cursor: default; }
+            .pill-op       { background: #1a3a5c; color: #7ec8e3; border: 1px solid #2a5a8c; }
+            .pill-lang     { background: #1a3d1a; color: #7de87d; border: 1px solid #2a6a2a; }
+            .pill-file     { background: #3d2a00; color: #f0c060; border: 1px solid #7a5500; }
+            .pill-utf8     { background: #1a1a3d; color: #a0a0f0; border: 1px solid #3a3a8c; }
+            .pill-useful   { background: #3d1a3d; color: #e0a0e0; border: 1px solid #7a2a7a; }
+            .entropy-bar   { display: inline-block; vertical-align: middle; width: 60px; height: 8px; border-radius: 2px; border: 1px solid #555; background: #222; margin-right: 4px; position: relative; overflow: hidden; }
+            .entropy-fill  { height: 100%; border-radius: 1px; }
+            .magic-reason  { font-size: 0.78em; color: #aaa; padding-left: 4px; font-style: italic; }
+        </style>
+        <table class='table table-hover table-sm table-bordered' style='table-layout: fixed;'>
             <tr>
-                <th>Recipe (click to load)</th>
-                <th>Result snippet</th>
-                <th>Properties</th>
+                <th style='width:28%'>Recipe (click to load)</th>
+                <th style='width:32%'>Result snippet</th>
+                <th style='width:40%'>Detection signals</th>
             </tr>`;
 
-        /**
-         * Returns a CSS colour value based on an integer input.
-         *
-         * @param {number} val
-         * @returns {string}
-         */
-        function chooseColour(val) {
-            if (val < 3) return "green";
-            if (val < 5) return "goldenrod";
-            return "red";
-        }
-
         options.forEach(option => {
-            // Construct recipe URL
             // Replace this Magic op with the generated recipe
             const recipeConfig = currentRecipeConfig.slice(0, this.state.progress)
                     .concat(option.recipe)
                     .concat(currentRecipeConfig.slice(this.state.progress + 1)),
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
 
-            let language = "",
-                fileType = "",
-                matchingOps = "",
-                useful = "";
-            const entropy = `<span data-toggle="tooltip" data-container="body" title="Shannon Entropy is measured from 0 to 8. High entropy suggests encrypted or compressed data. Normal text is usually around 3.5 to 5.">Entropy: <span style="color: ${chooseColour(option.entropy)}">${option.entropy.toFixed(2)}</span></span>`,
-                validUTF8 = option.isUTF8 ? "<span data-toggle='tooltip' data-container='body' title='The data could be a valid UTF8 string based on its encoding.'>Valid UTF8</span>\n" : "";
+            // --- Detection triggers section ---
+            // Deduplicate ops, preserving first set of reasons for each
+            const seenOps = new Map();
+            for (const op of option.matchingOps) {
+                if (!seenOps.has(op.op)) seenOps.set(op.op, op.detectionReasons || []);
+            }
+            let triggersHtml = "";
+            if (seenOps.size) {
+                const pills = [...seenOps.entries()].map(([opName, reasons]) => {
+                    const reasonTip = reasons.length
+                        ? Utils.escapeHtml(reasons.join(" · "))
+                        : "Matched operation check";
+                    return `<span class='magic-pill pill-op' data-toggle='tooltip' data-container='body' title='${reasonTip}'>${Utils.escapeHtml(opName)}</span>`;
+                }).join("");
+                const reasonList = [...seenOps.values()].flat();
+                const reasonHtml = reasonList.length
+                    ? `<div class='magic-reason'>${Utils.escapeHtml(reasonList[0])}</div>`
+                    : "";
+                triggersHtml = `<div class='sig-section'><span class='sig-label'>Triggered by</span><br>${pills}${reasonHtml}</div>`;
+            }
+
+            // --- Output quality section ---
+            let qualityPills = "";
 
             if (option.languageScores[0].probability > 0) {
-                let likelyLangs = option.languageScores.filter(l => l.probability > 0);
-                if (likelyLangs.length < 1) likelyLangs = [option.languageScores[0]];
-                language = "<span data-toggle='tooltip' data-container='body' title='Based on a statistical comparison of the frequency of bytes in various languages. Ordered by likelihood.'>" +
-                    "Possible languages:\n    " +
-                    likelyLangs.map(lang => {
-                        return MagicLib.codeToLanguage(lang.lang);
-                    }).join("\n    ") +
-                    "</span>\n";
+                const likelyLangs = option.languageScores.filter(l => l.probability > 0);
+                const langNames = (likelyLangs.length ? likelyLangs : [option.languageScores[0]])
+                    .map(l => MagicLib.codeToLanguage(l.lang)).join(", ");
+                qualityPills += `<span class='magic-pill pill-lang' data-toggle='tooltip' data-container='body' title='Byte frequency matches ${Utils.escapeHtml(langNames)} (chi-squared test)'>&#x1F310; ${Utils.escapeHtml(langNames)}</span>`;
             }
 
             if (option.fileType) {
-                fileType = `<span data-toggle="tooltip" data-container="body" title="Based on the presence of magic bytes.">File type: ${option.fileType.mime} (${option.fileType.ext})</span>\n`;
+                qualityPills += `<span class='magic-pill pill-file' data-toggle='tooltip' data-container='body' title='Magic bytes match ${Utils.escapeHtml(option.fileType.mime)}'>&#x1F4C4; ${Utils.escapeHtml(option.fileType.mime)} (.${Utils.escapeHtml(option.fileType.ext)})</span>`;
             }
 
-            if (option.matchingOps.length) {
-                matchingOps = `Matching ops: ${[...new Set(option.matchingOps.map(op => op.op))].join(", ")}\n`;
+            if (option.isUTF8) {
+                qualityPills += `<span class='magic-pill pill-utf8' data-toggle='tooltip' data-container='body' title='Data is valid UTF-8'>UTF-8 &#x2713;</span>`;
             }
 
             if (option.useful) {
-                useful = "<span data-toggle='tooltip' data-container='body' title='This could be an operation that displays data in a useful way, such as rendering an image.'>Useful op detected</span>\n";
+                qualityPills += `<span class='magic-pill pill-useful' data-toggle='tooltip' data-container='body' title='Contains an operation that renders data usefully, e.g. an image viewer'>&#x2728; Useful op</span>`;
             }
+
+            const qualityHtml = qualityPills
+                ? `<div class='sig-section'><span class='sig-label'>Output quality</span><br>${qualityPills}</div>`
+                : "";
+
+            // --- Entropy bar ---
+            const e = option.entropy;
+            const ePercent = Math.min(100, (e / 8) * 100).toFixed(1);
+            const eColour = e < 3 ? "#4caf50" : e < 5 ? "#ff9800" : "#f44336";
+            const eLabel = e < 3 ? "low — text-like" : e < 5 ? "medium — encoded" : "high — compressed/encrypted";
+            const entropyHtml = `<div class='sig-section'><span class='sig-label'>Entropy</span><br>` +
+                `<span class='entropy-bar' data-toggle='tooltip' data-container='body' title='Shannon entropy: ${e.toFixed(2)}/8 — ${eLabel}'>` +
+                `<span class='entropy-fill' style='width:${ePercent}%;background:${eColour}'></span></span>` +
+                `<span style='color:${eColour}'>${e.toFixed(2)}</span> <span style='color:#888;font-size:0.8em'>${eLabel}</span></div>`;
 
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
                 <td>${Utils.escapeHtml(Utils.escapeWhitespace(Utils.truncate(option.data, 99)))}</td>
-                <td>${language}${fileType}${matchingOps}${useful}${validUTF8}${entropy}</td>
+                <td><div class='magic-signals'>${triggersHtml}${qualityHtml}${entropyHtml}</div></td>
             </tr>`;
         });
 

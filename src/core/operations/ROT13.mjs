@@ -24,6 +24,19 @@ class ROT13 extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/ROT13";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
+        this.checks = [
+            {
+                // Input looks like natural language text but decodes to different natural language —
+                // matches inputs that are predominantly alphabetic with word-like structure.
+                pattern: "(?:[a-zA-Z]{2,}\\s*){4,}",
+                flags: "",
+                args: [true, true, false, 13],
+                entropyRange: [3.0, 5.5],
+                output: {
+                    entropyRange: [3.0, 5.5]
+                }
+            }
+        ];
         this.args = [
             {
                 name: "Rotate lower case chars",

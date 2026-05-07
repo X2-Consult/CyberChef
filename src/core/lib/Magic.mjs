@@ -40,6 +40,8 @@ class Magic {
             inputEntropy = this.calcEntropy();
 
         this.opCriteria.forEach(check => {
+            const detectionReasons = [];
+
             // If the input doesn't lie in the required entropy range, move on
             if (check.entropyRange &&
                 (inputEntropy < check.entropyRange[0] ||
@@ -50,7 +52,19 @@ class Magic {
                 !check.pattern.test(this.inputStr))
                 return;
 
-            matches.push(check);
+            // Record what triggered this match for display in the UI
+            if (check.pattern) {
+                const src = check.pattern.source;
+                detectionReasons.push(`Pattern: ${src.length > 50 ? src.slice(0, 50) + "…" : src}`);
+            }
+            if (check.entropyRange) {
+                detectionReasons.push(`Entropy ${inputEntropy.toFixed(2)} within [${check.entropyRange[0]}–${check.entropyRange[1]}]`);
+            }
+            if (!check.pattern && !check.entropyRange) {
+                detectionReasons.push("Unconditional check");
+            }
+
+            matches.push({...check, detectionReasons});
         });
 
         return matches;

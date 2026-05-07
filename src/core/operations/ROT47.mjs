@@ -24,6 +24,18 @@ class ROT47 extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/ROT13#Variants";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
+        this.checks = [
+            {
+                // Input is composed entirely of printable ASCII in the ROT47 range (0x21–0x7e) plus whitespace.
+                pattern: "^[\\x21-\\x7e\\s]{20,}$",
+                flags: "",
+                args: [47],
+                entropyRange: [3.5, 6.5],
+                output: {
+                    entropyRange: [3.0, 5.5]
+                }
+            }
+        ];
         this.args = [
             {
                 name: "Amount",
