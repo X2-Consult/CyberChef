@@ -410,20 +410,39 @@
                         <h5 class="modal-title">Load recipe</h5>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="load-name" class="bmd-label-floating">Recipe name</label>
-                            <select class="form-control" id="load-name"></select>
-                            <span class="bmd-help">Load your recipe from local storage by selecting its name from the drop-down</span>
-                        </div>
-                        <div class="form-group">
-                            <label for="load-text" class="bmd-label-floating">Recipe</label>
-                            <textarea class="form-control" id="load-text" rows="5"></textarea>
-                            <span class="bmd-help">Load your recipe by pasting it into this box</span>
+                        <ul class="nav nav-tabs mb-3" id="load-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="my-recipes-tab-link" data-toggle="tab" href="#my-recipes-tab" role="tab" aria-controls="my-recipes-tab" aria-selected="true">My Recipes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="ctf-library-tab-link" data-toggle="tab" href="#ctf-library-tab" role="tab" aria-controls="ctf-library-tab" aria-selected="false">&#127958; CTF Library</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="my-recipes-tab" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="load-name" class="bmd-label-floating">Recipe name</label>
+                                    <select class="form-control" id="load-name"></select>
+                                    <span class="bmd-help">Load your recipe from local storage by selecting its name from the drop-down</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="load-text" class="bmd-label-floating">Recipe</label>
+                                    <textarea class="form-control" id="load-text" rows="5"></textarea>
+                                    <span class="bmd-help">Load your recipe by pasting it into this box</span>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="ctf-library-tab" role="tabpanel">
+                                <input id="ctf-recipe-search" type="search" class="form-control mb-2" placeholder="Search recipes by name, description, or tag…" autocomplete="off">
+                                <div id="ctf-category-filters" class="mb-2"></div>
+                                <div id="ctf-recipe-list" style="max-height:340px;overflow-y:auto;"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="load-button" data-dismiss="modal">Load</button>
-                        <button type="button" class="btn btn-danger" id="load-delete-button">Delete</button>
+                        <div id="my-recipes-footer">
+                            <button type="button" class="btn btn-primary" id="load-button" data-dismiss="modal">Load</button>
+                            <button type="button" class="btn btn-danger" id="load-delete-button">Delete</button>
+                        </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>

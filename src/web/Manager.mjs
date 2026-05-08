@@ -145,6 +145,12 @@ class Manager {
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
 
+        // CTF Recipe Library
+        this.addMultiEventListener("#ctf-recipe-search", "keyup search", this.controls.ctfRecipeSearch, this.controls);
+        this.addDynamicListener("#ctf-category-filters", "click", this.controls.ctfCategoryFilter, this.controls);
+        this.addDynamicListener("#ctf-recipe-list", "click", this.controls.ctfRecipeLoad, this.controls);
+        document.getElementById("load-tabs").addEventListener("shown.bs.tab", this.controls.loadTabChange.bind(this.controls));
+
         // Operations
         this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
         this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);

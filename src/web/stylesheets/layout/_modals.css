@@ -115,3 +115,82 @@ p a:focus {
         linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
         linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
+
+/* ------------------------------------------------------------------ */
+/* CTF Recipe Library                                                   */
+/* ------------------------------------------------------------------ */
+
+.ctf-cat-btn {
+    margin: 0 3px 4px 0;
+    font-size: 0.78em;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--primary-border-colour);
+    background: transparent;
+    color: var(--primary-font-colour);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.ctf-cat-btn:hover,
+.ctf-cat-btn.ctf-cat-active {
+    background: var(--category-list-font-colour);
+    color: #fff;
+    border-color: var(--category-list-font-colour);
+}
+
+.ctf-recipe-row {
+    display: flex;
+    align-items: center;
+    padding: 7px 6px;
+    border-bottom: 1px solid var(--secondary-border-colour);
+    gap: 8px;
+}
+
+.ctf-recipe-row:last-child {
+    border-bottom: none;
+}
+
+.ctf-recipe-row:hover {
+    background: var(--secondary-background-colour);
+}
+
+.ctf-recipe-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ctf-recipe-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.88em;
+    color: var(--primary-font-colour);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ctf-recipe-desc {
+    display: block;
+    font-size: 0.78em;
+    color: var(--subtext-font-colour);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ctf-recipe-cat-badge {
+    flex-shrink: 0;
+    font-size: 0.72em;
+    padding: 2px 7px;
+    border-radius: 10px;
+    border: 1px solid var(--primary-border-colour);
+    color: var(--subtext-font-colour);
+    white-space: nowrap;
+}
+
+.ctf-empty {
+    padding: 12px 6px;
+    color: var(--subtext-font-colour);
+    font-size: 0.88em;
+}

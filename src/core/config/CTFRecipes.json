@@ -1,0 +1,274 @@
+[
+    {
+        "name": "Decode Base64",
+        "description": "Standard Base64 decode. Look for A–Z, a–z, 0–9, +, / with = padding.",
+        "category": "Encoding",
+        "tags": ["base64", "common"],
+        "recipe": [{"op": "From Base64", "args": ["A-Za-z0-9+/=", true, false]}]
+    },
+    {
+        "name": "Decode Base64 (URL-safe)",
+        "description": "URL-safe Base64 variant using - and _ instead of + and /. Common in JWTs and web apps.",
+        "category": "Encoding",
+        "tags": ["base64", "url", "jwt"],
+        "recipe": [{"op": "From Base64", "args": ["A-Za-z0-9-_", true, false]}]
+    },
+    {
+        "name": "Double Base64 Decode",
+        "description": "Decode data that has been Base64-encoded twice — a common CTF obfuscation layer.",
+        "category": "Encoding",
+        "tags": ["base64", "double"],
+        "recipe": [
+            {"op": "From Base64", "args": ["A-Za-z0-9+/=", true, false]},
+            {"op": "From Base64", "args": ["A-Za-z0-9+/=", true, false]}
+        ]
+    },
+    {
+        "name": "Decode Hex",
+        "description": "Decode hex-encoded data. Auto-detects space, colon, 0x-prefix, or no delimiter.",
+        "category": "Encoding",
+        "tags": ["hex", "common"],
+        "recipe": [{"op": "From Hex", "args": ["Auto"]}]
+    },
+    {
+        "name": "Decode Binary",
+        "description": "Decode space-separated binary (0s and 1s) to ASCII text.",
+        "category": "Encoding",
+        "tags": ["binary", "bits"],
+        "recipe": [{"op": "From Binary", "args": ["Space", 8]}]
+    },
+    {
+        "name": "Decode Octal",
+        "description": "Decode space-separated octal values to ASCII text.",
+        "category": "Encoding",
+        "tags": ["octal", "base8"],
+        "recipe": [{"op": "From Octal", "args": ["Space"]}]
+    },
+    {
+        "name": "Decode Decimal / Char Codes",
+        "description": "Decode space-separated decimal character codes (e.g. 72 101 108 108 111) to ASCII text.",
+        "category": "Encoding",
+        "tags": ["decimal", "charcode", "ascii"],
+        "recipe": [{"op": "From Charcode", "args": ["Space", 10]}]
+    },
+    {
+        "name": "URL Decode",
+        "description": "Decode percent-encoded URL characters (%20 → space, %3D → =, etc.).",
+        "category": "Encoding",
+        "tags": ["url", "percent", "web"],
+        "recipe": [{"op": "URL Decode", "args": []}]
+    },
+    {
+        "name": "HTML Entity Decode",
+        "description": "Decode HTML entities (&amp; → &, &lt; → <, &#x41; → A, etc.).",
+        "category": "Encoding",
+        "tags": ["html", "entity", "web"],
+        "recipe": [{"op": "HTML To Text", "args": []}]
+    },
+    {
+        "name": "Decode Base32",
+        "description": "Decode Base32-encoded data (A–Z, 2–7, = padding).",
+        "category": "Encoding",
+        "tags": ["base32"],
+        "recipe": [{"op": "From Base32", "args": ["A-Z2-7=", true]}]
+    },
+    {
+        "name": "Decode Base58",
+        "description": "Decode Base58 (Bitcoin alphabet — no 0, O, I, l characters).",
+        "category": "Encoding",
+        "tags": ["base58", "bitcoin"],
+        "recipe": [{"op": "From Base58", "args": ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz", true]}]
+    },
+    {
+        "name": "Decode Base85 (Ascii85)",
+        "description": "Decode Base85 / Ascii85 encoded data.",
+        "category": "Encoding",
+        "tags": ["base85", "ascii85"],
+        "recipe": [{"op": "From Base85", "args": ["!-u", true]}]
+    },
+    {
+        "name": "ROT13",
+        "description": "Rotate letters by 13 positions. Self-inverse — encoding and decoding are the same operation.",
+        "category": "Ciphers",
+        "tags": ["rot13", "caesar", "rotation", "common"],
+        "recipe": [{"op": "ROT13", "args": [true, true, false, 13]}]
+    },
+    {
+        "name": "ROT47",
+        "description": "Rotate all printable ASCII characters (0x21–0x7e) by 47. Includes digits and symbols.",
+        "category": "Ciphers",
+        "tags": ["rot47", "rotation"],
+        "recipe": [{"op": "ROT47", "args": [47]}]
+    },
+    {
+        "name": "Caesar Brute Force (all 25 shifts)",
+        "description": "Try every Caesar cipher rotation (1–25) and display each result. Scan for readable plaintext.",
+        "category": "Ciphers",
+        "tags": ["rot13", "caesar", "brute force", "rotation"],
+        "recipe": [{"op": "ROT13 Brute Force", "args": [true, true, false, 100, ""]}]
+    },
+    {
+        "name": "Atbash Cipher",
+        "description": "Reverse-alphabet substitution (A↔Z, B↔Y, …). Self-inverse.",
+        "category": "Ciphers",
+        "tags": ["atbash", "substitution"],
+        "recipe": [{"op": "Atbash Cipher", "args": []}]
+    },
+    {
+        "name": "XOR Brute Force (single byte)",
+        "description": "Try all 255 single-byte XOR keys and display results. Scan output for readable text.",
+        "category": "Ciphers",
+        "tags": ["xor", "brute force", "key"],
+        "recipe": [{"op": "XOR Brute Force", "args": [1, 100, 0, "Standard", false, false, ""]}]
+    },
+    {
+        "name": "XOR with Known Key (hex)",
+        "description": "XOR input with a hex key. Edit the key argument (currently 00) before baking.",
+        "category": "Ciphers",
+        "tags": ["xor", "key", "decrypt"],
+        "recipe": [{"op": "XOR", "args": [{"option": "Hex", "string": "00"}, "Standard", false]}]
+    },
+    {
+        "name": "Vigenère Decode",
+        "description": "Decode a Vigenère cipher with a known key. Edit the key argument (currently KEY) before baking.",
+        "category": "Ciphers",
+        "tags": ["vigenere", "polyalphabetic", "key"],
+        "recipe": [{"op": "Vigenère Decode", "args": ["KEY"]}]
+    },
+    {
+        "name": "From Morse Code",
+        "description": "Decode Morse code to text. Expects dots (.) and dashes (-) separated by spaces, lines by newlines.",
+        "category": "Ciphers",
+        "tags": ["morse", "dots", "dashes"],
+        "recipe": [{"op": "From Morse Code", "args": ["Space", "Line feed"]}]
+    },
+    {
+        "name": "Bacon Cipher Decode",
+        "description": "Decode Bacon's cipher — groups of 5 A/B characters encoding letters.",
+        "category": "Ciphers",
+        "tags": ["bacon", "steganography"],
+        "recipe": [{"op": "Bacon Cipher Decode", "args": ["Standard (I=J and U=V)", "A/B", false]}]
+    },
+    {
+        "name": "A1Z26 Decode",
+        "description": "Convert numbers to letters (1=A, 2=B, …, 26=Z). Expects space-separated values.",
+        "category": "Ciphers",
+        "tags": ["a1z26", "number", "substitution"],
+        "recipe": [{"op": "A1Z26 Cipher Decode", "args": ["Space"]}]
+    },
+    {
+        "name": "MD5 Hash",
+        "description": "Compute the MD5 hash of the input.",
+        "category": "Hashing",
+        "tags": ["md5", "hash"],
+        "recipe": [{"op": "MD5", "args": []}]
+    },
+    {
+        "name": "SHA-1 Hash",
+        "description": "Compute the SHA-1 hash of the input.",
+        "category": "Hashing",
+        "tags": ["sha1", "hash"],
+        "recipe": [{"op": "SHA1", "args": []}]
+    },
+    {
+        "name": "SHA-256 Hash",
+        "description": "Compute the SHA-256 hash of the input.",
+        "category": "Hashing",
+        "tags": ["sha256", "hash"],
+        "recipe": [{"op": "SHA2", "args": ["256"]}]
+    },
+    {
+        "name": "Identify Hash Type",
+        "description": "Analyse a hash string to identify its likely algorithm (MD5, SHA-1, SHA-256, bcrypt, NTLM, etc.).",
+        "category": "Hashing",
+        "tags": ["hash", "identify", "analyse"],
+        "recipe": [{"op": "Analyse Hash", "args": []}]
+    },
+    {
+        "name": "Decode JWT",
+        "description": "Decode a JSON Web Token — splits and Base64-decodes the header, payload, and signature.",
+        "category": "Web",
+        "tags": ["jwt", "json", "token", "web"],
+        "recipe": [{"op": "JWT Decode", "args": []}]
+    },
+    {
+        "name": "URL Decode → HTML Entity Decode",
+        "description": "Double-decode: percent-encoding first, then HTML entities. Common in web challenge payloads.",
+        "category": "Web",
+        "tags": ["url", "html", "double", "web"],
+        "recipe": [
+            {"op": "URL Decode", "args": []},
+            {"op": "HTML To Text", "args": []}
+        ]
+    },
+    {
+        "name": "Extract URLs",
+        "description": "Extract all URLs from the input using regex.",
+        "category": "Web",
+        "tags": ["url", "extract", "web"],
+        "recipe": [{"op": "Extract URLs", "args": [false]}]
+    },
+    {
+        "name": "Extract Email Addresses",
+        "description": "Extract all email addresses from the input.",
+        "category": "Web",
+        "tags": ["email", "extract"],
+        "recipe": [{"op": "Extract Email Addresses", "args": [false]}]
+    },
+    {
+        "name": "Strip HTTP Headers",
+        "description": "Remove HTTP headers from a raw HTTP response, leaving only the body.",
+        "category": "Web",
+        "tags": ["http", "headers", "web"],
+        "recipe": [{"op": "Strip HTTP headers", "args": []}]
+    },
+    {
+        "name": "Magic — Auto-detect",
+        "description": "Automatically detect encoding, file type, and language. Suggests the most likely recipe. Start here when you have unknown data.",
+        "category": "Analysis",
+        "tags": ["magic", "auto", "detect", "common"],
+        "recipe": [{"op": "Magic", "args": [3, false, false, ""]}]
+    },
+    {
+        "name": "Magic — Intensive (CTF mode)",
+        "description": "Magic with intensive mode: brute-forces XOR (255 keys), bit rotations, all 25 Caesar shifts, and character encodings. Slower but finds more.",
+        "category": "Analysis",
+        "tags": ["magic", "auto", "intensive", "xor", "caesar", "brute force"],
+        "recipe": [{"op": "Magic", "args": [2, true, false, ""]}]
+    },
+    {
+        "name": "Detect File Type",
+        "description": "Identify the file type by reading magic bytes (file signature). Useful for files with wrong or missing extensions.",
+        "category": "Analysis",
+        "tags": ["file", "type", "magic bytes", "forensics"],
+        "recipe": [{"op": "Detect File Type", "args": [true, true, true, true, true, true, true]}]
+    },
+    {
+        "name": "Entropy Analysis",
+        "description": "Calculate Shannon entropy. Low (<3.5) = text-like, medium (3.5–6) = encoded/compressed, high (>6) = encrypted or compressed.",
+        "category": "Analysis",
+        "tags": ["entropy", "analysis", "forensics"],
+        "recipe": [{"op": "Entropy", "args": ["Shannon scale"]}]
+    },
+    {
+        "name": "Extract Printable Strings",
+        "description": "Extract sequences of printable ASCII characters — like the Unix 'strings' command. Useful for binary/executable analysis.",
+        "category": "Analysis",
+        "tags": ["strings", "forensics", "binary", "printable"],
+        "recipe": [{"op": "Strings", "args": ["Single byte", 4, "[ASCII]", false]}]
+    },
+    {
+        "name": "Hex Dump",
+        "description": "View data as a hex dump with ASCII preview column. Essential for binary analysis.",
+        "category": "Analysis",
+        "tags": ["hexdump", "hex", "binary", "forensics"],
+        "recipe": [{"op": "To Hexdump", "args": [16, false, false, false]}]
+    },
+    {
+        "name": "Extract Hashes",
+        "description": "Extract MD5, SHA-1, SHA-256, and other hash strings from text.",
+        "category": "Analysis",
+        "tags": ["hash", "extract", "forensics"],
+        "recipe": [{"op": "Extract Hashes", "args": [40, true, false]}]
+    }
+]

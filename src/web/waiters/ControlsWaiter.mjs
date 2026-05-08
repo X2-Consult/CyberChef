@@ -6,6 +6,7 @@
 
 import Utils from "../../core/Utils.mjs";
 import { eolSeqToCode } from "../utils/editorUtils.mjs";
+import CTFRecipes from "../../core/config/CTFRecipes.json" with { type: "json" };
 
 
 /**
@@ -546,6 +547,136 @@ ${navigator.userAgent}
             recList = document.getElementById("rec-list");
 
         recList.style.bottom = controls.clientHeight + "px";
+    }
+
+    // ------------------------------------------------------------------ //
+    // CTF Recipe Library                                                   //
+    // ------------------------------------------------------------------ //
+
+    /**
+     * Populates the CTF recipe library tab the first time it is shown.
+     * Safe to call multiple times — rebuilds category filters once and
+     * rerenders the recipe list on each call so search state is preserved.
+     */
+    populateCTFRecipes() {
+        this._ctfActiveCategory = this._ctfActiveCategory || "All";
+        this._renderCTFCategoryFilters();
+        this._renderCTFRecipeList();
+    }
+
+    /**
+     * Renders the category filter pills.
+     *
+     * @private
+     */
+    _renderCTFCategoryFilters() {
+        const container = document.getElementById("ctf-category-filters");
+        if (!container || container.dataset.built) return;
+
+        const categories = ["All", ...new Set(CTFRecipes.map(r => r.category))];
+        container.innerHTML = categories.map(cat => {
+            const active = cat === this._ctfActiveCategory ? " ctf-cat-active" : "";
+            return `<button class="btn btn-sm ctf-cat-btn${active}" data-cat="${Utils.escapeHtml(cat)}">${Utils.escapeHtml(cat)}</button>`;
+        }).join(" ");
+        container.dataset.built = "1";
+    }
+
+    /**
+     * Filters and renders the CTF recipe list based on active category and search term.
+     *
+     * @private
+     */
+    _renderCTFRecipeList() {
+        const searchEl = document.getElementById("ctf-recipe-search");
+        const listEl = document.getElementById("ctf-recipe-list");
+        if (!listEl) return;
+
+        const query = (searchEl ? searchEl.value : "").trim().toLowerCase();
+        const cat = this._ctfActiveCategory || "All";
+
+        const filtered = CTFRecipes.filter((r, idx) => {
+            r._idx = idx;
+            const catMatch = cat === "All" || r.category === cat;
+            if (!catMatch) return false;
+            if (!query) return true;
+            return (
+                r.name.toLowerCase().includes(query) ||
+                r.description.toLowerCase().includes(query) ||
+                (r.tags || []).some(t => t.toLowerCase().includes(query))
+            );
+        });
+
+        if (!filtered.length) {
+            listEl.innerHTML = "<p class='ctf-empty'>No recipes match your search.</p>";
+            return;
+        }
+
+        listEl.innerHTML = filtered.map(r => `
+            <div class="ctf-recipe-row">
+                <div class="ctf-recipe-info">
+                    <span class="ctf-recipe-name">${Utils.escapeHtml(r.name)}</span>
+                    <span class="ctf-recipe-desc">${Utils.escapeHtml(r.description)}</span>
+                </div>
+                <span class="ctf-recipe-cat-badge">${Utils.escapeHtml(r.category)}</span>
+                <button class="btn btn-sm btn-primary ctf-load-btn" data-recipe-idx="${r._idx}" data-dismiss="modal">Load</button>
+            </div>
+        `).join("");
+    }
+
+    /**
+     * Handler for CTF recipe search input.
+     */
+    ctfRecipeSearch() {
+        this._renderCTFRecipeList();
+    }
+
+    /**
+     * Handler for CTF category filter pill clicks.
+     *
+     * @param {Event} e
+     */
+    ctfCategoryFilter(e) {
+        const btn = e.target.closest(".ctf-cat-btn");
+        if (!btn) return;
+
+        this._ctfActiveCategory = btn.dataset.cat;
+
+        // Update active styling
+        document.querySelectorAll(".ctf-cat-btn").forEach(b => {
+            b.classList.toggle("ctf-cat-active", b.dataset.cat === this._ctfActiveCategory);
+        });
+
+        this._renderCTFRecipeList();
+    }
+
+    /**
+     * Handler for CTF recipe Load button clicks.
+     *
+     * @param {Event} e
+     */
+    ctfRecipeLoad(e) {
+        const btn = e.target.closest(".ctf-load-btn");
+        if (!btn) return;
+
+        const idx = parseInt(btn.dataset.recipeIdx, 10);
+        const recipe = CTFRecipes[idx];
+        if (!recipe) return;
+
+        this.app.setRecipeConfig(recipe.recipe);
+        this.app.autoBake();
+        $("#rec-list [data-toggle=popover]").popover();
+    }
+
+    /**
+     * Shows/hides the My Recipes footer buttons depending on which tab is active.
+     *
+     * @param {Event} e - Bootstrap tab shown.bs.tab event
+     */
+    loadTabChange(e) {
+        const isCTF = e.target && e.target.id === "ctf-library-tab-link";
+        const footer = document.getElementById("my-recipes-footer");
+        if (footer) footer.style.display = isCTF ? "none" : "";
+        if (isCTF) this.populateCTFRecipes();
     }
 
 }
